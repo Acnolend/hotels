@@ -1,9 +1,10 @@
 package com.springhotels.technicalTest.application.services;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.springhotels.technicalTest.application.repository.HotelRepository;
@@ -22,13 +23,13 @@ public class ReadHotelService implements ReadHotelUseCase {
     }
 
     @Override
-    public List<Hotel> getHotels() {
-        return this.repository.fetchAll();
+    public Page<Hotel> getHotels(Pageable pageable) {
+        return this.repository.fetchAll(pageable);
     }
 
     @Override
-    public List<Hotel> getHotelsByCity(String city) {
-        return this.repository.fetchByCity(city);
+    public Page<Hotel> getHotelsByCity(Pageable pageable, String city) {
+        return this.repository.fetchByCity(pageable, city);
     }
     
 }

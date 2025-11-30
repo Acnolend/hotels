@@ -7,6 +7,10 @@ public class HotelPutDTO {
     @Valid
     AddressDTO address;
 
+    public HotelPutDTO(AddressDTO address) {
+        this.address = address;
+    }
+
     public AddressDTO getAddress() {
         return address;
     }

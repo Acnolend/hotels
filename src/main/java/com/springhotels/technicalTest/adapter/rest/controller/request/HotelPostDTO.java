@@ -17,6 +17,12 @@ public class HotelPostDTO {
     @Valid
     AddressDTO address;
 
+    public HotelPostDTO(String name, int stars, AddressDTO address) {
+        this.name = name;
+        this.stars = stars;
+        this.address = address;
+    }
+
     public String getName() {
         return name;
     }

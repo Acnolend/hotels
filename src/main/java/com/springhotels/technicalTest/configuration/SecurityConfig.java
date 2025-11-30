@@ -19,8 +19,12 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll()
+                .requestMatchers("/h2-console/**").permitAll()
+                .requestMatchers("/hotels/{id}").hasRole("ADMIN")
+                .anyRequest().authenticated()
             )
+            .httpBasic()
+            .and()
             .headers(headers -> headers.frameOptions(frame -> frame.disable()));
 
         return http.build();
@@ -42,3 +46,4 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager(user, admin);
     }
 }
+

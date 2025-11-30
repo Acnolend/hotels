@@ -1,7 +1,6 @@
 package com.springhotels.technicalTest.adapter.rest.controller;
 
 import java.sql.SQLException;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -28,6 +27,11 @@ import com.springhotels.technicalTest.domain.enumerate.HotelStars;
 import com.springhotels.technicalTest.domain.valueobject.HotelAddress;
 import com.springhotels.technicalTest.domain.valueobject.HotelName;
 
+import jakarta.validation.Valid;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 @RestController
 @RequestMapping("/hotels")
 public class HotelController {
@@ -50,15 +54,17 @@ public class HotelController {
     }
 
     @GetMapping
-    public ResponseEntity<List<HotelResponseDTO>> getHotels() {
-        List<HotelResponseDTO> response = this.readHotelUseCase.getHotels().stream()
-                .map(hotel -> new HotelResponseDTO(
-                    hotel.getId().toString(), 
-                    hotel.getName().getName(), 
-                    hotel.getStars().getValue(), 
-                    AddressDTO.fromAddress(hotel.getAddress())))
-                .toList();
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<?> getHotels(Pageable pageable) {
+        Page<Hotel> page = this.readHotelUseCase.getHotels(pageable);
+        Page<HotelResponseDTO> dtoPage = page.map(hotel ->
+                new HotelResponseDTO(
+                    hotel.getId().toString(),
+                    hotel.getName().getName(),
+                    hotel.getStars().getValue(),
+                    AddressDTO.fromAddress(hotel.getAddress())
+                )
+        );
+        return ResponseEntity.ok(dtoPage);
     }
 
     @GetMapping("id/{id}")
@@ -73,34 +79,49 @@ public class HotelController {
     }
 
     @GetMapping("city/{city}")
-    public ResponseEntity<List<HotelResponseDTO>> getHotelsByCity(@PathVariable String city) {
-        List<HotelResponseDTO> response = this.readHotelUseCase.getHotelsByCity(city).stream()
-                .map(hotel -> new HotelResponseDTO(
-                    hotel.getId().toString(), 
-                    hotel.getName().getName(), 
-                    hotel.getStars().getValue(), 
-                    AddressDTO.fromAddress(hotel.getAddress())))
-                .toList();
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<Page<HotelResponseDTO>> getHotelsByCity(Pageable pageable, @PathVariable String city) {
+        Page<Hotel> page = this.readHotelUseCase.getHotelsByCity(pageable, city);
+        Page<HotelResponseDTO> response = page.map(hotel ->
+                new HotelResponseDTO(
+                        hotel.getId().toString(),
+                        hotel.getName().getName(),
+                        hotel.getStars().getValue(),
+                        AddressDTO.fromAddress(hotel.getAddress())
+                )
+        );
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public ResponseEntity<Hotel> createHotel(@RequestBody HotelPostDTO hotelDTO) {
+    public ResponseEntity<HotelResponseDTO> createHotel(@Valid @RequestBody HotelPostDTO hotelDTO) {
         AddressDTO addressDTO = hotelDTO.getAddress();
         Hotel createdHotel = this.createHotelUseCase.createHotel(
             new HotelName(hotelDTO.getName()),
             HotelStars.fromValue(hotelDTO.getStars()),
             new HotelAddress(addressDTO.getStreet(), addressDTO.getCity(), addressDTO.getCountry(), addressDTO.getPostalCode()));
-        return new ResponseEntity<>(createdHotel, HttpStatus.CREATED);
+
+        HotelResponseDTO response = new HotelResponseDTO(
+            createdHotel.getId().toString(),
+            createdHotel.getName().getName(),
+            createdHotel.getStars().getValue(),
+            AddressDTO.fromAddress(createdHotel.getAddress())
+        );
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Hotel> updateHotel(@PathVariable String id, @RequestBody HotelPutDTO hotelDTO) {   
+    public ResponseEntity<HotelResponseDTO> updateHotel(@PathVariable String id, @Valid @RequestBody HotelPutDTO hotelDTO) {   
         AddressDTO addressDTO = hotelDTO.getAddress();
         Hotel updatedHotel = this.updateHotelUseCase.updateHotel(
             UUID.fromString(id), 
             new HotelAddress(addressDTO.getStreet(), addressDTO.getCity(), addressDTO.getCountry(), addressDTO.getPostalCode()));
-        return new ResponseEntity<>(updatedHotel, HttpStatus.CREATED);
+        HotelResponseDTO response = new HotelResponseDTO(
+            updatedHotel.getId().toString(),
+            updatedHotel.getName().getName(),
+            updatedHotel.getStars().getValue(),
+            AddressDTO.fromAddress(updatedHotel.getAddress())
+        );
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @DeleteMapping("{id}")
