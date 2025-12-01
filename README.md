@@ -1,4 +1,4 @@
-# 🏨 Spring Hotels – Technical Test
+# 🏨 Spring Hotels
 
 Este proyecto implementa una API REST para la gestión de hoteles siguiendo
 principios de **DDD (Domain-Driven Design)** y **Arquitectura Hexagonal**.
@@ -23,7 +23,6 @@ con una separación clara entre dominio, aplicación y adaptadores.
 ## 🧱 Arquitectura (Hexagonal + DDD)
 
 La estructura del proyecto sigue tres capas principales:
-
 
 ### ✔ Dominio
 Contiene toda la lógica empresarial:
@@ -68,6 +67,85 @@ El dominio nunca conoce las tecnologías externas.
 
 ---
 
+## 🗄 Base de datos (H2 in-memory)
+
+### Consola disponible en
+
+```bash
+http://localhost:8080/h2-console
+```
+### Configuración
+
+```bash
+JDBC URL: jdbc:h2:mem:testdb
+Usuario: sa
+Contraseña: (vacía)
+```
+
+## 📡 Endpoints principales
+
+### Obtener todos los hoteles (paginado)
+
+```bash
+GET /hotels?page=0&size=5
+```
+
+### Obtener hotel por ID
+
+```bash
+GET /hotels/id/{id}
+```
+
+### Buscar hoteles por ciudad
+
+```bash
+GET /hotels/city/{city}
+```
+
+### Crear hotel
+
+```bash
+POST /hotels
+Content-Type: application/json
+```
+
+```json
+{
+  "name": "Hotel Example",
+  "stars": 4,
+  "address": {
+    "street": "Calle 1",
+    "city": "Madrid",
+    "country": "Spain",
+    "postalCode": "28000"
+  }
+}
+```
+
+### Actualizar dirección de un hotel
+
+```bash
+PUT /hotels/{id}
+Content-Type: application/json
+```
+
+```json
+{
+    "address": {
+        "city": "Madrid",
+        "country": "España",
+        "postalCode": "35010",
+        "street": "Av. de Las Canteras 123"
+    }
+}
+```
+
+### Eliminar hotel (solo ADMIN)
+
+```bash
+DELETE /hotels/{id}
+```
+
 ## 🔐 Seguridad
 
 Implementada mediante **Spring Security** usando Basic Auth.
@@ -79,10 +157,10 @@ Implementada mediante **Spring Security** usando Basic Auth.
 
 ### Permisos
 
-| Rol   | Permisos                         |
-|-------|----------------------------------|
-| USER  | GET /hotels, /city, /id          |
-| ADMIN | Todos + DELETE                   |
+| Rol   | Permisos |
+|-------|----------|
+| USER  | GET /hotels, GET /hotels/id/{id}, GET /hotels/city/{city}, POST /hotels, PUT /hotels/{id} |
+| ADMIN | Todos los anteriores + DELETE /hotels/{id} |
 
 ---
 
@@ -99,3 +177,10 @@ Ejecutar tests:
 
 ```bash
 mvn test
+```
+
+## ▶️ Cómo ejecutar
+
+```bash
+mvn spring-boot:run
+```
