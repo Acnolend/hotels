@@ -77,7 +77,7 @@ http://localhost:8080/h2-console
 ### Configuración
 
 ```bash
-JDBC URL: jdbc:h2:mem:testdb
+JDBC URL: jdbc:h2:mem:hotelsdb
 Usuario: sa
 Contraseña: (vacía)
 ```
