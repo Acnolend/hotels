@@ -11,32 +11,26 @@ import com.springhotels.technicalTest.domain.enumerate.HotelStars;
 
 @Component
 public class HotelJpaMapper {
-
+    
     public Hotel toDomain(HotelJpaEntity entity) {
-        return new Hotel(
-                entity.getId(),
-                new HotelName(entity.getName()),
-                HotelStars.fromValue(entity.getStars()),
-                new HotelAddress(
-                        entity.getAddress().getStreet(),
-                        entity.getAddress().getCity(),
-                        entity.getAddress().getCountry(),
-                        entity.getAddress().getPostalCode()
-                )
+        AddressEmbeddable adr = entity.getAddress();
+        HotelAddress address = new HotelAddress(
+                adr.getStreet(),
+                adr.getCity(),
+                adr.getCountry(),
+                adr.getPostalCode()
         );
+        return new Hotel(entity.getId(), new HotelName(entity.getName()), HotelStars.fromValue(entity.getStars()), address);
     }
 
     public HotelJpaEntity toJpa(Hotel hotel) {
-        HotelJpaEntity entity = new HotelJpaEntity();
-        entity.setId(hotel.getId());
-        entity.setName(hotel.getName().getName());
-        entity.setStars(hotel.getStars().getValue());
-        AddressEmbeddable adr = new AddressEmbeddable();
-        adr.setStreet(hotel.getAddress().getStreet());
-        adr.setCity(hotel.getAddress().getCity());
-        adr.setCountry(hotel.getAddress().getCountry());
-        adr.setPostalCode(hotel.getAddress().getPostalCode());
-        entity.setAddress(adr);
-        return entity;
+        AddressEmbeddable adr = new AddressEmbeddable(
+                hotel.getAddress().getStreet(),
+                hotel.getAddress().getCity(),
+                hotel.getAddress().getCountry(),
+                hotel.getAddress().getPostalCode()
+        );
+        return new HotelJpaEntity(hotel.getId(), hotel.getName().getName(), hotel.getStars().getValue(), adr);
     }
 }
+

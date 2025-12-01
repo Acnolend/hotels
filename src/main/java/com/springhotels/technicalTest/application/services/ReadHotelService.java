@@ -1,8 +1,8 @@
 package com.springhotels.technicalTest.application.services;
 
+import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,12 +14,15 @@ import com.springhotels.technicalTest.domain.entity.Hotel;
 @Service
 public class ReadHotelService implements ReadHotelUseCase {
 
-    @Autowired
     private HotelRepository repository;
 
+    public ReadHotelService(HotelRepository repository) {
+        this.repository = repository;
+    }
+
     @Override
-    public Hotel getHotel(UUID id) {
-       return this.repository.fetch(id);
+    public Optional<Hotel> getHotel(UUID id) {
+       return repository.fetch(id);
     }
 
     @Override

@@ -2,17 +2,31 @@ package com.springhotels.technicalTest.domain.valueobject;
 
 import java.util.Objects;
 
+import com.springhotels.technicalTest.domain.shared.HotelConstraints;
+
 public class HotelAddress {
 
     private static final String ERROR_FIELD_NOT_DEFINED = "%s cannot be null";
     private static final String ERROR_FIELD_BLANK = "%s cannot be blank";
-    private static final String ERROR_FIELD_TOO_SHORT = "%s must have at least 2 characters";
-    private static final String ERROR_FIELD_TOO_LONG = "%s must not exceed 100 characters";
+    private static final String ERROR_FIELD_TOO_SHORT = "%s must have at least " + HotelConstraints.MIN_LENGTH + " characters";
+    private static final String ERROR_FIELD_TOO_LONG = "%s must not exceed " + HotelConstraints.MAX_LENGTH + " characters";
     private static final String ERROR_POSTAL_CODE_INVALID = "Postal code format is invalid";
 
+    /**
+     * The street of the address. It is a required attribute.
+     */
     private final String street;
+    /**
+     * The city of the address. It is a required attribute.
+     */
     private final String city;
+    /**
+     * The country of the address. It is a required attribute.
+     */
     private final String country;
+    /**
+     * The postal code of the address. It is a required attribute.
+     */
     private final String postalCode;
 
     public HotelAddress(String street, String city, String country, String postalCode) {
@@ -46,10 +60,10 @@ public class HotelAddress {
         if (trimmed.isEmpty()) {
             throw new IllegalArgumentException(String.format(ERROR_FIELD_BLANK, fieldName));
         }
-        if (trimmed.length() < 2) {
+        if (trimmed.length() < HotelConstraints.MIN_LENGTH) {
             throw new IllegalArgumentException(String.format(ERROR_FIELD_TOO_SHORT, fieldName));
         }
-        if (trimmed.length() > 100) {
+        if (trimmed.length() > HotelConstraints.MAX_LENGTH) {
             throw new IllegalArgumentException(String.format(ERROR_FIELD_TOO_LONG, fieldName));
         }
         return trimmed;
@@ -63,7 +77,7 @@ public class HotelAddress {
         if (trimmed.isEmpty()) {
             throw new IllegalArgumentException(String.format(ERROR_FIELD_BLANK, "Postal code"));
         }
-        if (!trimmed.matches("^[A-Za-z0-9\\- ]{2,10}$")) {
+        if (!trimmed.matches(HotelConstraints.POSTAL_CODE_PATTERN)) {
             throw new IllegalArgumentException(ERROR_POSTAL_CODE_INVALID);
         }
         return trimmed;

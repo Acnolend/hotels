@@ -1,5 +1,6 @@
 package com.springhotels.technicalTest.application.usecases;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Pageable;
@@ -14,7 +15,7 @@ public interface ReadHotelUseCase {
      * @param id
      * @return a Hotel.
      */
-    public Hotel getHotel(UUID id);
+    public Optional<Hotel> getHotel(UUID id);
     /**
      * This method return all hotels.
      * @return list of hotels.

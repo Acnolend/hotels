@@ -1,5 +1,6 @@
 package com.springhotels.technicalTest.adapter.jpa;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -32,15 +33,12 @@ public class HotelRepositoryJpaAdapter implements HotelRepository {
 
     @Override
     public Page<Hotel> fetchAll(Pageable pageable) {
-        return jpaRepo.findAll(pageable)
-                .map(mapper::toDomain);
+        return jpaRepo.findAll(pageable).map(mapper::toDomain);
     }
 
     @Override
-    public Hotel fetch(UUID id) {
-        return jpaRepo.findById(id)
-                .map(mapper::toDomain)
-                .orElse(null);
+    public Optional<Hotel> fetch(UUID id) {
+        return jpaRepo.findById(id).map(mapper::toDomain);
     }
 
     @Override
@@ -52,8 +50,7 @@ public class HotelRepositoryJpaAdapter implements HotelRepository {
 
     @Override
     public Page<Hotel> fetchByCity(Pageable pageable, String city) {
-        return jpaRepo.findByAddressCity(pageable, city)
-                .map(mapper::toDomain);
+        return jpaRepo.findByAddressCity(pageable, city).map(mapper::toDomain);
     }
 
 

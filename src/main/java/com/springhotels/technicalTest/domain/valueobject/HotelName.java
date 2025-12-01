@@ -2,12 +2,15 @@ package com.springhotels.technicalTest.domain.valueobject;
 
 import java.util.Objects;
 
+import com.springhotels.technicalTest.domain.shared.HotelConstraints;
+
 public class HotelName {
     private static final String ERROR_NAME_NOT_DEFINED = "The name of the hotel cannot be null";
     private static final String ERROR_NAME_BLANK = "The name of the hotel cannot be blank";
-    private static final String ERROR_NAME_TOO_SHORT = "The name of the hotel must have at least 2 characters";
-    private static final String ERROR_NAME_TOO_LONG = "The name of the hotel must not exceed 100 characters";
+    private static final String ERROR_NAME_TOO_SHORT = "The name of the hotel must have at least " + HotelConstraints.MIN_LENGTH + " characters";
+    private static final String ERROR_NAME_TOO_LONG = "The name of the hotel must not exceed " + HotelConstraints.MAX_LENGTH + " characters";
     private static final String ERROR_NAME_INVALID_CHARS = "The name of the hotel contains invalid characters";
+    
     /**
      * The name of the hotel. It is a required attribute.
      */
@@ -33,13 +36,13 @@ public class HotelName {
         if (name.trim().isEmpty()) {
             throw new IllegalArgumentException(ERROR_NAME_BLANK);
         }
-        if (name.length() < 2) {
+        if (name.length() < HotelConstraints.MIN_LENGTH) {
             throw new IllegalArgumentException(ERROR_NAME_TOO_SHORT);
         }
-        if (name.length() > 100) {
+        if (name.length() > HotelConstraints.MAX_LENGTH) {
             throw new IllegalArgumentException(ERROR_NAME_TOO_LONG);
         }
-        if (!name.matches("^[\\p{L}0-9 .,'-]+$")) {
+        if (!name.matches(HotelConstraints.NAME_PATTERN)) {
             throw new IllegalArgumentException(ERROR_NAME_INVALID_CHARS);
         }
     }

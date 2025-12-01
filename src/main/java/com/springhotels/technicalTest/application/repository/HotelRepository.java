@@ -1,5 +1,6 @@
 package com.springhotels.technicalTest.application.repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -13,7 +14,7 @@ public interface HotelRepository {
 
     public abstract Page<Hotel> fetchAll(Pageable pageable);
 
-    public abstract Hotel fetch(UUID id);
+    public abstract Optional<Hotel> fetch(UUID id);
 
     public abstract Hotel save(Hotel hotel);
 

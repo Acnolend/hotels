@@ -1,4 +1,4 @@
-package com.springhotels.technicalTest.adapter.rest.controller.request;
+package com.springhotels.technicalTest.adapter.rest.request;
 
 import jakarta.validation.Valid;
 

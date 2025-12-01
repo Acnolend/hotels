@@ -1,13 +1,15 @@
-package com.springhotels.technicalTest.adapter.rest.controller.request;
+package com.springhotels.technicalTest.adapter.rest.request;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class HotelPostDTO {
 
     @NotBlank(message = "Name cannot be blank")
+    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
     String name;
 
     @Min(value = 1, message = "Stars must be between 1 and 5")
@@ -51,8 +53,6 @@ public class HotelPostDTO {
     public String toString() {
         return String.format(
                 "Hotel={name=%s, stars=%s, address=%s}",
-                this.name,
-                this.stars,
-                this.address.toString());
+                this.name, this.stars, this.address.toString());
     }
 }

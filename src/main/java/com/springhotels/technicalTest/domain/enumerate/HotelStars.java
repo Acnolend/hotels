@@ -11,6 +11,7 @@ public enum HotelStars {
     FIVE_STARS(5);
 
     private final int value;
+    private static final String ERROR_INVALID_STARS = "Hotel stars must be between 1 and 5";
 
     HotelStars(int value) {
         this.value = value;
@@ -24,7 +25,7 @@ public enum HotelStars {
         return Arrays.stream(values())
                 .filter(stars -> stars.value == value)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Hotel stars must be between 1 and 5"));
+                .orElseThrow(() -> new IllegalArgumentException(ERROR_INVALID_STARS));
     }
 
     public static boolean isValid(int value) {
