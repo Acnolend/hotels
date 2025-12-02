@@ -9,7 +9,7 @@ con una separación clara entre dominio, aplicación y adaptadores.
 
 ## 📌 Tecnologías utilizadas
 
-- **Java 17**
+- **Java 21**
 - **Spring Boot 3**
 - **Spring Web**
 - **Spring Data JPA**
